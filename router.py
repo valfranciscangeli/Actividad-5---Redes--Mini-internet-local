@@ -26,7 +26,7 @@ if debug:
 # socket no orientado a conexión
 router = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
-# unimos el socket a la dirección this_address
+# unimos el socket a la dirección de este router
 router.bind(direccion_router_actual)
 
 # esperamos hasta recibir un mensaje ==============================================

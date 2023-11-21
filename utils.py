@@ -4,6 +4,8 @@ from cola_circular import  *
 cola_de_rutas = CircularQueue() # al inicio es vacía
 
 # funciones de parsing  ===============================================
+
+
 def create_packet(dict_packet):
     paquete = f'{dict_packet["ip"]},{dict_packet["puerto"]},{dict_packet["TTL"]},{dict_packet["mensaje"]}'
     return paquete
@@ -24,6 +26,16 @@ IP_packet_v2_str = create_packet(parsed_IP_packet)
 IP_packet_v2 = IP_packet_v2_str.encode()
 assert IP_packet_v1 == IP_packet_v2
 #print("IP_packet_v1 == IP_packet_v2 ? {}".format(IP_packet_v1 == IP_packet_v2))
+
+
+def create_final_packet(ip, puerto, TTL, mensaje):
+    dict_packet = {
+        "ip": ip,
+        "puerto": puerto,
+        "TTL": TTL,
+        "mensaje": mensaje
+    }
+    return create_packet(dict_packet).encode()
 
 # funciones para trabajar los txt ===============================================
 
