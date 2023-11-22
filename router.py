@@ -19,8 +19,6 @@ if debug:
     print(
         f"direccion: {direccion_router_actual}, archivo de rutas: {router_rutas}")
 
-# python3 router.py 127.0.0.1 8881 Conf_2_routers/rutas_R1_v1.txt
-# python3 router.py 127.0.0.1 8882 Conf_2_routers/rutas_R2_v1.txt
 
 # creacion del socket ============================================================
 # socket no orientado a conexión
@@ -70,7 +68,7 @@ while True:
 
                 # avisamos que se va a mandar
                 print(
-                    f"redirigiendo paquete {paquete_ip} con destino final {destination_address} desde {direccion_router_actual} hacia {direccion_next_hop}")
+                    f"redirigiendo paquete {paquete_ip} con destino final {destination_address} desde {direccion_router_actual} hacia {direccion_next_hop}\n")
 
                 # hacemos forward
                 fwd_message = create_packet(paquete_ip).encode()
@@ -78,6 +76,6 @@ while True:
 
             else:
                 print(
-                    f"No hay rutas hacia {destination_address} para paquete {paquete_ip}")
+                    f"No hay rutas hacia {destination_address} para paquete {paquete_ip}\n")
     else:
         print(f"Se recibió paquete {paquete_ip} con TTL 0")

@@ -1,7 +1,9 @@
-from cola_circular import  *
+from cola_circular import *
+import re
 
-# variables globales: 
-cola_de_rutas = CircularQueue() # al inicio es vacía
+# variables globales:
+cola_de_rutas = CircularQueue()  # al inicio es vacía
+debug = False
 
 # funciones de parsing  ===============================================
 
@@ -12,11 +14,14 @@ def create_packet(dict_packet):
 
 
 def parse_packet(IP_packet):
-    recibido = IP_packet.decode().split(",")
+    separador = ","
+    recibido = IP_packet.decode().split(separador)
+    mensaje =  (separador +'').join(recibido[3:]) # se asume que todo lo que está desde el 3er elemento es mensaje, por si este contiene comas
     return {"ip": recibido[0],
             "puerto": int(recibido[1]),
             "TTL": int(recibido[2]),
-            "mensaje": recibido[3]}
+            "mensaje": re.sub(r'\s+', ' ', mensaje)
+            }
 
 
 # tests:
@@ -25,7 +30,9 @@ parsed_IP_packet = parse_packet(IP_packet_v1)
 IP_packet_v2_str = create_packet(parsed_IP_packet)
 IP_packet_v2 = IP_packet_v2_str.encode()
 assert IP_packet_v1 == IP_packet_v2
-#print("IP_packet_v1 == IP_packet_v2 ? {}".format(IP_packet_v1 == IP_packet_v2))
+if debug:
+    print("IP_packet_v1 == IP_packet_v2 ? {}".format(
+        IP_packet_v1 == IP_packet_v2))
 
 
 def create_final_packet(ip, puerto, TTL, mensaje):
@@ -55,11 +62,12 @@ def leer_archivo(nombre_archivo):
                     "puerto_llegar": int(linea[4])
                 }
                 cola_resultado.enqueue(diccionario)
-            
+
             return cola_resultado
-        
+
     except FileNotFoundError:
-        print(f"El archivo {nombre_archivo} no se encuentra.")
+        if debug:
+            print(f"El archivo {nombre_archivo} no se encuentra.")
         return None
 
 
@@ -67,19 +75,17 @@ def leer_archivo(nombre_archivo):
 nombre_del_archivo = 'Conf_5_routers/rutas_R2_v3.txt'
 resultado = leer_archivo(nombre_del_archivo)
 
-# if resultado:
-#      print(resultado)
+if resultado and debug:
+    print(resultado)
 
 
 # manejo de rutas ==============================================
 
 def check_routes(routes_file_name, destination_address):
     global cola_de_rutas
-    print("cola actual:",cola_de_rutas)
     if cola_de_rutas.is_empty():
         cola_de_rutas = leer_archivo(routes_file_name)
-        
-
+    print("cola actual:", cola_de_rutas, "\n") #mostramos la cola de rutas
     dest_ip = destination_address[0]
     dest_port = destination_address[1]
 
@@ -89,13 +95,13 @@ def check_routes(routes_file_name, destination_address):
     while contador < total_rutas:
         primera = cola_de_rutas.get_first()
         red = primera["red"]
-        pto_ini = primera["puerto_inicial"] 
+        pto_ini = primera["puerto_inicial"]
         pto_fin = primera["puerto_final"]
         if dest_ip == red and pto_ini <= dest_port <= pto_fin:
             # encontramos la ruta buscada
             return (primera["ip_llegar"], primera["puerto_llegar"])
-        
-        contador +=1
+
+        contador += 1
 
     # no se encontró una ruta
     return None

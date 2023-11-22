@@ -1,5 +1,4 @@
 import os
-#os.system('python3 router.py 127.0.0.1 8882 Conf_2_routers/rutas_R2_v1.txt')
 
 import subprocess
 
