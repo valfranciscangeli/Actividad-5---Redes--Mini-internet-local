@@ -3,25 +3,37 @@ import re
 
 # variables globales:
 cola_de_rutas = CircularQueue()  # al inicio es vacía
-debug = False
+debug = True
+
+# clase para manejar paquetes ip ====================================
+
+class PaqueteIP:
+    def __init__(self, ip, puerto, ttl,mensaje=""):
+        self.ip = ip
+        self.puerto = puerto
+        self.ttl = ttl
+        self.mensaje = mensaje
+
+    def __str__(self):
+        return f'{self.ip},{self.puerto},{self.ttl},{self.mensaje}'
+
 
 # funciones de parsing  ===============================================
 
 
-def create_packet(dict_packet):
-    paquete = f'{dict_packet["ip"]},{dict_packet["puerto"]},{dict_packet["TTL"]},{dict_packet["mensaje"]}'
-    return paquete
+def create_packet(paquete_ip:PaqueteIP):
+    return str(paquete_ip)
 
 
-def parse_packet(IP_packet):
+def parse_packet(paquete_ip:str):
     separador = ","
-    recibido = IP_packet.decode().split(separador)
-    mensaje =  (separador +'').join(recibido[3:]) # se asume que todo lo que está desde el 3er elemento es mensaje, por si este contiene comas
-    return {"ip": recibido[0],
-            "puerto": int(recibido[1]),
-            "TTL": int(recibido[2]),
-            "mensaje": re.sub(r'\s+', ' ', mensaje)
-            }
+    recibido = paquete_ip.decode().split(separador)
+    # se asume que todo lo que está desde el 3ro elemento es mensaje, por si este contiene comas
+    mensaje = (separador + '').join(recibido[3:])
+    mensaje = re.sub(r'\s+', ' ', mensaje)
+    return PaqueteIP(recibido[0],recibido[1], recibido[2], mensaje)
+
+
 
 
 # tests:
@@ -34,15 +46,6 @@ if debug:
     print("IP_packet_v1 == IP_packet_v2 ? {}".format(
         IP_packet_v1 == IP_packet_v2))
 
-
-def create_final_packet(ip, puerto, TTL, mensaje):
-    dict_packet = {
-        "ip": ip,
-        "puerto": puerto,
-        "TTL": TTL,
-        "mensaje": mensaje
-    }
-    return create_packet(dict_packet).encode()
 
 # funciones para trabajar los txt ===============================================
 

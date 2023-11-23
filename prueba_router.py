@@ -39,8 +39,8 @@ try:
         lineas = archivo.readlines()
         for linea in lineas:
             print("linea:", linea, "\n")
-            mensaje = create_final_packet(
-                router_IP_destino, router_puerto_destino, router_ttl, linea+"\n")
+            mensaje = str(PaqueteIP(
+                router_IP_destino, router_puerto_destino, router_ttl, linea+"\n"))
             try:
                 origen.sendto(mensaje, direccion_origen)
                 time.sleep(tiempo_entre_paquetes)
