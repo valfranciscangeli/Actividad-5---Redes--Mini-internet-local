@@ -14,15 +14,16 @@ def create_packet(dict_packet):
 
 
 def parse_packet(IP_packet):
+    # el paquete se recibe codificado
     separador = ","
     IP_packet = IP_packet.decode()
     IP_packet = IP_packet.rstrip("\n")
-    recibido = IP_packet.split(separador)
+    IP_packet = IP_packet.split(separador)
     # se asume que todo lo que está desde el 3er elemento es mensaje, por si este contiene comas
-    mensaje = (separador + '').join(recibido[3:])
-    return {"ip": recibido[0],
-            "puerto": int(recibido[1]),
-            "TTL": int(recibido[2]),
+    mensaje = (separador + '').join(IP_packet[3:])
+    return {"ip": IP_packet[0],
+            "puerto": int(IP_packet[1]),
+            "TTL": int(IP_packet[2]),
             "mensaje": re.sub(r'\s+', ' ', mensaje)
             }
 

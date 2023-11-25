@@ -40,11 +40,10 @@ while True:
         # recibimos el mensaje usando recvfrom
         recv_message, return_address = router.recvfrom(buff_size)
 
-        if debug:
-            print("mensaje recibido:", recv_message.decode(), "\n")
-
         # si recibimos un mensaje saldremos de este ciclo para continuar con el código
         if recv_message != None:
+            if debug:
+                print("mensaje recibido:", recv_message.decode(), "\n")
             break
 
     paquete_ip = parse_packet(recv_message)
