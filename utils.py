@@ -8,8 +8,6 @@ cola_de_rutas = CircularQueue()  # al inicio es vacía
 # funciones de parsing  ===============================================
 
 
-
-
 def create_packet(dict_packet):
     paquete = f'{dict_packet["ip"]},{dict_packet["puerto"]},{dict_packet["TTL"]},{dict_packet["mensaje"]}'
     return paquete
@@ -20,7 +18,8 @@ def parse_packet(IP_packet):
     IP_packet = IP_packet.decode()
     IP_packet = IP_packet.rstrip("\n")
     recibido = IP_packet.split(separador)
-    mensaje =  (separador +'').join(recibido[3:]) # se asume que todo lo que está desde el 3er elemento es mensaje, por si este contiene comas
+    # se asume que todo lo que está desde el 3er elemento es mensaje, por si este contiene comas
+    mensaje = (separador + '').join(recibido[3:])
     return {"ip": recibido[0],
             "puerto": int(recibido[1]),
             "TTL": int(recibido[2]),
@@ -86,11 +85,11 @@ if resultado and debug:
 
 def check_routes(routes_file_name, destination_address):
     global cola_de_rutas
-    
+
     if cola_de_rutas.is_empty():
         cola_de_rutas = leer_archivo(routes_file_name)
     if debug:
-        print("cola actual:", cola_de_rutas,"\n")
+        print("cola actual:", cola_de_rutas, "\n")
     dest_ip = destination_address[0]
     dest_port = destination_address[1]
 

@@ -3,7 +3,7 @@ import socket
 from utils import *
 
 # debug? ==================================================
-debug: bool = True # True para mostrar mensajes de debuggeo
+debug: bool = True  # True para mostrar mensajes de debuggeo
 
 # recibimos los parámetros desde consola =========================================
 argumentos: list = sys.argv
@@ -41,7 +41,7 @@ while True:
         recv_message, return_address = router.recvfrom(buff_size)
 
         if debug:
-            print("mensaje recibido:", recv_message.decode(),"\n")
+            print("mensaje recibido:", recv_message.decode(), "\n")
 
         # si recibimos un mensaje saldremos de este ciclo para continuar con el código
         if recv_message != None:

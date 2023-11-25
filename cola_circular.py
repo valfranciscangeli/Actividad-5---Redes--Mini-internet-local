@@ -39,7 +39,6 @@ class CircularQueue:
         self.__first = (self.__first + 1) % len(self.queue)
 
         return first_value
-    
+
     def __str__(self) -> str:
         return str(self.queue)
-

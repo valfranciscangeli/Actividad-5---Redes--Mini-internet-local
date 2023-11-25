@@ -5,7 +5,7 @@ import time
 
 # debug? ==================================================
 debug: bool = False
-tiempo_entre_paquetes = 0 # tiempo entre el envio de cada paquete
+tiempo_entre_paquetes = 0  # tiempo entre el envio de cada paquete
 
 # recibimos los parámetros desde consola =========================================
 argumentos = sys.argv
@@ -13,7 +13,7 @@ if debug:
     print("argumentos:", argumentos)
 headers = argumentos[1].split(',')
 if debug:
-   print("headers:",headers)
+    print("headers:", headers)
 router_IP_destino = headers[0]
 router_puerto_destino = int(headers[1])
 router_ttl = int(headers[2])
