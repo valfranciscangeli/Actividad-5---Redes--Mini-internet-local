@@ -3,7 +3,7 @@ import socket
 from utils import *
 
 # debug? ==================================================
-debug: bool = True
+debug: bool = True # True para mostrar mensajes de debuggeo
 
 # recibimos los parámetros desde consola =========================================
 argumentos: list = sys.argv
@@ -24,7 +24,7 @@ if debug:
 # socket no orientado a conexión
 router = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
-# unimos el socket a la dirección de este router
+# unimos el socket a la dirección direccion_router_actual
 router.bind(direccion_router_actual)
 
 # esperamos hasta recibir un mensaje ==============================================
@@ -35,13 +35,13 @@ while True:
     # aquí esperaremos hasta recibir algun mensaje
     while True:
         if debug:
-            print("esperando mensaje ....")
+            print("===================== \nesperando mensaje .... \n")
 
         # recibimos el mensaje usando recvfrom
         recv_message, return_address = router.recvfrom(buff_size)
 
         if debug:
-            print("mensaje recibido:", recv_message.decode())
+            print("mensaje recibido:", recv_message.decode(),"\n")
 
         # si recibimos un mensaje saldremos de este ciclo para continuar con el código
         if recv_message != None:

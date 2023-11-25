@@ -2,10 +2,12 @@ from cola_circular import *
 import re
 
 # variables globales:
+debug = False  # True para mostrar los prints de debugging
 cola_de_rutas = CircularQueue()  # al inicio es vacía
-debug = False
 
 # funciones de parsing  ===============================================
+
+
 
 
 def create_packet(dict_packet):
@@ -15,7 +17,9 @@ def create_packet(dict_packet):
 
 def parse_packet(IP_packet):
     separador = ","
-    recibido = IP_packet.decode().split(separador)
+    IP_packet = IP_packet.decode()
+    IP_packet = IP_packet.rstrip("\n")
+    recibido = IP_packet.split(separador)
     mensaje =  (separador +'').join(recibido[3:]) # se asume que todo lo que está desde el 3er elemento es mensaje, por si este contiene comas
     return {"ip": recibido[0],
             "puerto": int(recibido[1]),
@@ -47,9 +51,9 @@ def create_final_packet(ip, puerto, TTL, mensaje):
 # funciones para trabajar los txt ===============================================
 
 
-def leer_archivo(nombre_archivo):
+def leer_archivo(archivo_rutas):
     try:
-        with open(nombre_archivo, 'r') as archivo:
+        with open(archivo_rutas, 'r') as archivo:
             lineas = archivo.readlines()
             cola_resultado = CircularQueue()
             for linea in lineas:
@@ -66,8 +70,7 @@ def leer_archivo(nombre_archivo):
             return cola_resultado
 
     except FileNotFoundError:
-        if debug:
-            print(f"El archivo {nombre_archivo} no se encuentra.")
+        print(f"El archivo {archivo_rutas} no se encuentra.")
         return None
 
 
@@ -83,9 +86,11 @@ if resultado and debug:
 
 def check_routes(routes_file_name, destination_address):
     global cola_de_rutas
+    
     if cola_de_rutas.is_empty():
         cola_de_rutas = leer_archivo(routes_file_name)
-    print("cola actual:", cola_de_rutas, "\n") #mostramos la cola de rutas
+    if debug:
+        print("cola actual:", cola_de_rutas,"\n")
     dest_ip = destination_address[0]
     dest_port = destination_address[1]
 
@@ -100,7 +105,6 @@ def check_routes(routes_file_name, destination_address):
         if dest_ip == red and pto_ini <= dest_port <= pto_fin:
             # encontramos la ruta buscada
             return (primera["ip_llegar"], primera["puerto_llegar"])
-
         contador += 1
 
     # no se encontró una ruta
@@ -108,10 +112,12 @@ def check_routes(routes_file_name, destination_address):
 
 
 # test:
-# archivo = "Conf_5_routers/rutas_R2_v3.txt"
-# assert check_routes(archivo,
-#                     ("127.0.0.1", 8884)) == ("127.0.0.1", 8883)
-# assert check_routes(archivo,
-#                     ("127.0.0.1", 8880)) == None
-# assert check_routes(archivo,
-#                     ("127.0.0.1", 8887)) == None
+# precaución: ejecutar este test modifica la cola de rutas global
+if debug:
+    archivo = "Conf_5_routers/rutas_R2_v3.txt"
+    assert check_routes(archivo,
+                        ("127.0.0.1", 8884)) == ("127.0.0.1", 8883)
+    assert check_routes(archivo,
+                        ("127.0.0.1", 8880)) == None
+    assert check_routes(archivo,
+                        ("127.0.0.1", 8887)) == None

@@ -43,19 +43,3 @@ class CircularQueue:
     def __str__(self) -> str:
         return str(self.queue)
 
-# test:
-
-# cola = CircularQueue()
-
-# cola.enqueue(1)
-# cola.enqueue(2)
-# cola.enqueue(3)
-
-# print("primer valor en cola:", cola.get_first())
-# print("primer valor en cola:", cola.get_first())
-# print("primer valor en cola:", cola.get_first())
-# print("primer valor en cola:", cola.get_first())
-# print("primer valor en cola:", cola.get_first())
-# print("primer valor en cola:", cola.get_first())
-# print("primer valor en cola:", cola.get_first())
-# print("primer valor en cola:", cola.get_first())
